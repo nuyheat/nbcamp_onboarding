@@ -16,3 +16,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         show_sql: true
+jwt:
+  secret:
+    key: c2hyZWstdmVyeS1zZWNyZXQta2V5LWFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6MTIzNDU2Nzg5MA== # Base64 인코딩된 32바이트 이상의 키
+  expiration:
+    access-token: 3600000 # 60분 (ms 단위)
+    refresh-token: 1209600000 # 14일 (ms 단위)
