@@ -33,7 +33,7 @@ public class UsersController {
         }
     }
 
-    @PostMapping("/login")
+    @GetMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto, HttpServletResponse response) {
         try {
             String token = authService.login(loginDto);

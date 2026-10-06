@@ -44,4 +44,11 @@ public class AuthService {
             throw new IllegalAccessException("권한이 없습니다");
         }
     }
+
+    public String getUserIdFromToken(HttpServletRequest request) {
+        String token= jwtUtil.getJwtFromHeader(request);
+        Claims info = jwtUtil.getUserInfoFromToken(token);
+
+        return  info.getSubject();
+    }
 }

@@ -34,7 +34,7 @@ public class UsersService {
 
         //저장
         Users user = new Users();
-        BaseTime baseTime = new BaseTime(LocalDateTime.now(), LocalDateTime.now());
+        BaseTime baseTime = new BaseTime();
         user.setLoginId(userDto.getLoginId());
         user.setLoginPassword(encodedPassword);
         user.setRole(userDto.getRole());

@@ -3,6 +3,7 @@ package nbcamp.deliveryapp.Config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -35,6 +36,7 @@ public class SecurityConfig {
         // URL별 접근 권한 설정
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/users/join", "/api/users/login").permitAll() // 가입/로그인은 누구나 허용
+                .requestMatchers(HttpMethod.GET, "/api/menu", "/api/menu/{id}").permitAll()
                 .anyRequest().authenticated() // 그 외의 모든 요청은 JWT 인증 필요!
         );
 

@@ -15,6 +15,7 @@ public class Payment {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
     private Orders order;
 
     @Enumerated(EnumType.STRING)

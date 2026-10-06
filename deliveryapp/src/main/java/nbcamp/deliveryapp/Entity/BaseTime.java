@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 
 @Embeddable
 @Getter
-@NoArgsConstructor @AllArgsConstructor
 public class BaseTime {
 
     @Column(nullable = false)
@@ -18,4 +17,14 @@ public class BaseTime {
 
     @Column(nullable = false)
     private LocalDateTime modifiedAt;
+
+    public BaseTime(LocalDateTime modifiedAt, LocalDateTime createdAt) {
+        this.modifiedAt = modifiedAt;
+        this.createdAt = createdAt;
+    }
+
+    public BaseTime() {
+        this.modifiedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+    }
 }
