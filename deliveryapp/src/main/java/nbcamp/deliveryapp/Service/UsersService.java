@@ -5,6 +5,8 @@ import nbcamp.deliveryapp.Dto.LoginDto;
 import nbcamp.deliveryapp.Dto.UserDto;
 import nbcamp.deliveryapp.Entity.BaseTime;
 import nbcamp.deliveryapp.Entity.Users;
+import nbcamp.deliveryapp.Exception.CustomException;
+import nbcamp.deliveryapp.Exception.ErrorCode;
 import nbcamp.deliveryapp.Repository.UsersRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +28,7 @@ public class UsersService {
     public void join(UserDto userDto) {
         //중복검증
         if (usersRepository.existsByLoginId(userDto.getLoginId())) {
-            throw new IllegalArgumentException("이미 사용중인 아이디입니다.");
+            throw new CustomException(ErrorCode.C409_DUPLICATE_USER);
         }
 
         //비밀번호 암호화
