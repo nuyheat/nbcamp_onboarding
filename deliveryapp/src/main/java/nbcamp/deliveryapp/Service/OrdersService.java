@@ -2,6 +2,7 @@ package nbcamp.deliveryapp.Service;
 
 import lombok.RequiredArgsConstructor;
 import nbcamp.deliveryapp.Dto.CreateOrderDto;
+import nbcamp.deliveryapp.Dto.OrderResponseDto;
 import nbcamp.deliveryapp.Entity.Menu;
 import nbcamp.deliveryapp.Entity.Orders;
 import nbcamp.deliveryapp.Entity.Users;
@@ -13,6 +14,8 @@ import nbcamp.deliveryapp.Repository.OrdersRepository;
 import nbcamp.deliveryapp.Repository.UsersRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -41,5 +44,14 @@ public class OrdersService {
         order.setStatus(OrderStatus.ORDERED);
 
         ordersRepository.save(order);
+    }
+
+    public List<OrderResponseDto> findAllByLoginId(String loginId) {
+        return ordersRepository
+                .findAllByUserLoginIdOrMenuUserLoginId(loginId, loginId)
+                .stream()
+                .map(OrderResponseDto::new)
+                .toList();
+
     }
 }
