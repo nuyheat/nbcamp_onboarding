@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class AddMenuDto {
+public class CreateMenuDto {
 
     @NotNull @Size(min = 1, message = "이름을 채워야 합니다.")
     private String name;

@@ -3,7 +3,7 @@ package nbcamp.deliveryapp.Controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import nbcamp.deliveryapp.Dto.AddMenuDto;
+import nbcamp.deliveryapp.Dto.CreateMenuDto;
 import nbcamp.deliveryapp.Dto.MenuResponseDto;
 import nbcamp.deliveryapp.Dto.UpdateMenuDto;
 import nbcamp.deliveryapp.Enum.UserRole;
@@ -28,17 +28,17 @@ public class MenuController {
     private final AuthService authService;
 
     @PostMapping
-    public ResponseEntity<String> addMenu(@Valid @RequestBody AddMenuDto menuDto,
-                                          BindingResult bindingResult,
-                                          HttpServletRequest request) {
+    public ResponseEntity<String> createMenu(@Valid @RequestBody CreateMenuDto menuDto,
+                                             BindingResult bindingResult,
+                                             HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             throw new CustomException(ErrorCode.C400_INVALID_INPUT_VALUE);
         }
 
-        String userId = authService.getUserIdFromRequest(request);
+        String loginId = authService.getLoginIdFromRequest(request);
 
         authService.validRoleCheck(request, UserRole.OWNER);
-        menuService.save(menuDto, userId);
+        menuService.create(menuDto, loginId);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -71,10 +71,23 @@ public class MenuController {
             throw new CustomException(ErrorCode.C400_INVALID_INPUT_VALUE);
         }
 
-        String userId = authService.getUserIdFromRequest(request);
+        String loginId = authService.getLoginIdFromRequest(request);
 
         authService.validRoleCheck(request, UserRole.OWNER);
-        menuService.update(menuDto, userId);
+        menuService.update(menuDto, loginId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> deleteMenu(@PathVariable Long id,
+                                             HttpServletRequest request) {
+        String loginId = authService.getLoginIdFromRequest(request);
+
+        authService.validRoleCheck(request, UserRole.OWNER);
+        menuService.updateIsDeletedToTrue(id, loginId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

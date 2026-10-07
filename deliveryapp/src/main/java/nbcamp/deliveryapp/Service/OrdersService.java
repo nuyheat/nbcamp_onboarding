@@ -1,0 +1,48 @@
+package nbcamp.deliveryapp.Service;
+
+import lombok.RequiredArgsConstructor;
+import nbcamp.deliveryapp.Dto.CreateOrderDto;
+import nbcamp.deliveryapp.Entity.BaseTime;
+import nbcamp.deliveryapp.Entity.Menu;
+import nbcamp.deliveryapp.Entity.Orders;
+import nbcamp.deliveryapp.Entity.Users;
+import nbcamp.deliveryapp.Enum.OrderStatus;
+import nbcamp.deliveryapp.Exception.CustomException;
+import nbcamp.deliveryapp.Exception.ErrorCode;
+import nbcamp.deliveryapp.Repository.MenuRepository;
+import nbcamp.deliveryapp.Repository.OrdersRepository;
+import nbcamp.deliveryapp.Repository.UsersRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+public class OrdersService {
+
+    private final OrdersRepository ordersRepository;
+    private final MenuRepository menuRepository;
+    private final UsersRepository usersRepository;
+
+    @Transactional
+    public void create(CreateOrderDto orderDto, String loginId) {
+        Menu menu = menuRepository.findById(orderDto.getMenuId())
+                .orElseThrow(() -> new CustomException(ErrorCode.C404_MENU_NOT_FOUND));
+
+        Users user = usersRepository.findByLoginId(loginId)
+                .orElseThrow(() -> new CustomException(ErrorCode.C404_USER_NOT_FOUND));
+
+        Orders order = new Orders();
+        BaseTime baseTime = new BaseTime();
+
+        order.setUser(user);
+        order.setMenu(menu);
+        order.setTotalPrice(menu.getPrice() * orderDto.getCount());
+        order.setAddress(orderDto.getAddress());
+        order.setCount(orderDto.getCount());
+        order.setStatus(OrderStatus.ORDERED);
+        order.setBaseTime(baseTime);
+
+        ordersRepository.save(order);
+    }
+}

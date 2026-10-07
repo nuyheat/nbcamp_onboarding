@@ -13,8 +13,6 @@ import nbcamp.deliveryapp.Repository.UsersRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -47,7 +45,7 @@ public class AuthService {
         }
     }
 
-    public String getUserIdFromRequest(HttpServletRequest request) {
+    public String getLoginIdFromRequest(HttpServletRequest request) {
         String token= jwtUtil.getJwtFromHeader(request);
         Claims info = jwtUtil.getUserInfoFromToken(token);
 
