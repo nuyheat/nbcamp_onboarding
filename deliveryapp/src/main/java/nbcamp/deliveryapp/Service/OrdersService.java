@@ -29,7 +29,7 @@ public class OrdersService {
 
     @Transactional
     public void create(CreateOrderDto orderDto, String loginId) {
-        Menu menu = menuRepository.findById(orderDto.getMenuId())
+        Menu menu = menuRepository.findByIdAndIsDeleted(orderDto.getMenuId(), false)
                 .orElseThrow(() -> new CustomException(ErrorCode.C404_MENU_NOT_FOUND));
 
         Users user = usersRepository.findByLoginId(loginId)
@@ -83,8 +83,8 @@ public class OrdersService {
 
         OrderStatus newStatus = orderDto.getOrderStatus();
         OrderStatus oldStatus = order.getStatus();
-        if (newStatus.equals(OrderStatus.ORDERED) && oldStatus.equals(OrderStatus.ACCEPTED) ||
-            newStatus.equals(OrderStatus.ACCEPTED) && oldStatus.equals(OrderStatus.COMPLETED)) {
+        if (oldStatus.equals(OrderStatus.PAID) && newStatus.equals(OrderStatus.ACCEPTED) ||
+                oldStatus.equals(OrderStatus.ACCEPTED) && newStatus.equals(OrderStatus.COMPLETED)) {
             order.setStatus(newStatus);
         } else {
             throw new CustomException(ErrorCode.C400_BAD_REQUEST);
