@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class Menu {
+public class Menu extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -26,7 +26,4 @@ public class Menu {
     private String description = "";
 
     private boolean isDeleted = false;
-
-    @Embedded
-    private BaseTime baseTime;
 }

@@ -8,7 +8,7 @@ import nbcamp.deliveryapp.Enum.UserRole;
 
 @Entity
 @Getter @Setter
-public class Users {
+public class Users extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,6 +25,4 @@ public class Users {
     @Column(nullable = false)
     private UserRole role;
 
-    @Embedded
-    private BaseTime baseTime;
 }

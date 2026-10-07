@@ -8,7 +8,7 @@ import nbcamp.deliveryapp.Enum.PaymentType;
 
 @Entity
 @Getter @Setter
-public class Payment {
+public class Payment extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -29,6 +29,4 @@ public class Payment {
     @Column(nullable = false)
     private PaymentStatus status;
 
-    @Embedded
-    private BaseTime baseTime;
 }

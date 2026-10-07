@@ -7,7 +7,7 @@ import nbcamp.deliveryapp.Enum.OrderStatus;
 
 @Entity
 @Getter @Setter
-public class Orders {
+public class Orders extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -33,7 +33,4 @@ public class Orders {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status;
-
-    @Embedded
-    private BaseTime baseTime;
 }

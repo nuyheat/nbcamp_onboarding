@@ -2,7 +2,6 @@ package nbcamp.deliveryapp.Service;
 
 import lombok.RequiredArgsConstructor;
 import nbcamp.deliveryapp.Dto.CreateOrderDto;
-import nbcamp.deliveryapp.Entity.BaseTime;
 import nbcamp.deliveryapp.Entity.Menu;
 import nbcamp.deliveryapp.Entity.Orders;
 import nbcamp.deliveryapp.Entity.Users;
@@ -33,7 +32,6 @@ public class OrdersService {
                 .orElseThrow(() -> new CustomException(ErrorCode.C404_USER_NOT_FOUND));
 
         Orders order = new Orders();
-        BaseTime baseTime = new BaseTime();
 
         order.setUser(user);
         order.setMenu(menu);
@@ -41,7 +39,6 @@ public class OrdersService {
         order.setAddress(orderDto.getAddress());
         order.setCount(orderDto.getCount());
         order.setStatus(OrderStatus.ORDERED);
-        order.setBaseTime(baseTime);
 
         ordersRepository.save(order);
     }

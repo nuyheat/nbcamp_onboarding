@@ -3,18 +3,13 @@ package nbcamp.deliveryapp.Service;
 import lombok.RequiredArgsConstructor;
 import nbcamp.deliveryapp.Dto.LoginDto;
 import nbcamp.deliveryapp.Dto.UserDto;
-import nbcamp.deliveryapp.Entity.BaseTime;
 import nbcamp.deliveryapp.Entity.Users;
 import nbcamp.deliveryapp.Exception.CustomException;
 import nbcamp.deliveryapp.Exception.ErrorCode;
 import nbcamp.deliveryapp.Repository.UsersRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,11 +31,9 @@ public class UsersService {
 
         //저장
         Users user = new Users();
-        BaseTime baseTime = new BaseTime();
         user.setLoginId(userDto.getLoginId());
         user.setLoginPassword(encodedPassword);
         user.setRole(userDto.getRole());
-        user.setBaseTime(baseTime);
 
         usersRepository.save(user);
     }

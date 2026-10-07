@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import nbcamp.deliveryapp.Dto.CreateMenuDto;
 import nbcamp.deliveryapp.Dto.MenuResponseDto;
 import nbcamp.deliveryapp.Dto.UpdateMenuDto;
-import nbcamp.deliveryapp.Entity.BaseTime;
 import nbcamp.deliveryapp.Entity.Menu;
 import nbcamp.deliveryapp.Entity.Users;
 import nbcamp.deliveryapp.Exception.CustomException;
@@ -14,7 +13,6 @@ import nbcamp.deliveryapp.Repository.UsersRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -32,12 +30,10 @@ public class MenuService {
                 .orElseThrow(() -> new CustomException(ErrorCode.C404_USER_NOT_FOUND));
 
         Menu menu = new Menu();
-        BaseTime baseTime = new BaseTime();
 
         menu.setName(menuDto.getName());
         menu.setPrice(menuDto.getPrice());
         menu.setDescription(menuDto.getDescription());
-        menu.setBaseTime(baseTime);
         menu.setUser(user);
 
         menuRepository.save(menu);
@@ -52,12 +48,10 @@ public class MenuService {
             throw new CustomException(ErrorCode.C403_NO_AUTHORIZATION);
         }
 
-        BaseTime baseTime = new BaseTime(menu.getBaseTime().getCreatedAt(), LocalDateTime.now());
 
         menu.setName(menuDto.getName());
         menu.setPrice(menuDto.getPrice());
         menu.setDescription(menuDto.getDescription());
-        menu.setBaseTime(baseTime);
     }
 
     @Transactional
@@ -69,10 +63,7 @@ public class MenuService {
             throw new CustomException(ErrorCode.C403_NO_AUTHORIZATION);
         }
 
-        BaseTime baseTime = new BaseTime(menu.getBaseTime().getCreatedAt(), LocalDateTime.now());
-
         menu.setDeleted(true);
-        menu.setBaseTime(baseTime);
     }
 
     public MenuResponseDto findById(Long id) {
