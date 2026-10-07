@@ -1,5 +1,6 @@
 package nbcamp.deliveryapp.Controller;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

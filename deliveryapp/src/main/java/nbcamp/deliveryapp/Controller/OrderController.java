@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nbcamp.deliveryapp.Dto.CreateOrderDto;
 import nbcamp.deliveryapp.Dto.OrderResponseDto;
+import nbcamp.deliveryapp.Dto.UpdateOrderStatusDto;
 import nbcamp.deliveryapp.Enum.UserRole;
 import nbcamp.deliveryapp.Exception.CustomException;
 import nbcamp.deliveryapp.Exception.ErrorCode;
@@ -53,12 +54,29 @@ public class OrderController {
                 .body(orderList);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<String> updateOrderStatus(@PathVariable Long id,
+    @PatchMapping("/canceled/{id}")
+    public ResponseEntity<String> cancelOrder(@PathVariable Long id,
                                               HttpServletRequest request) {
         authService.validRoleCheck(request, UserRole.CUSTOMER);
         String loginId = authService.getLoginIdFromRequest(request);
         orderService.updateOrderStatusToCanceled(id, loginId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
+    }
+
+    @PatchMapping
+    public ResponseEntity<String> updateOrderStatus(@Valid @RequestBody UpdateOrderStatusDto orderDto,
+                                              BindingResult bindingResult,
+                                              HttpServletRequest request) {
+        if (bindingResult.hasErrors()) {
+            throw new CustomException(ErrorCode.C400_INVALID_INPUT_VALUE);
+        }
+
+        authService.validRoleCheck(request, UserRole.OWNER);
+        String loginId = authService.getLoginIdFromRequest(request);
+        orderService.updateOrderStatus(orderDto, loginId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

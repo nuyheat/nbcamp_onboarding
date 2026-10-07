@@ -3,6 +3,7 @@ package nbcamp.deliveryapp.Service;
 import lombok.RequiredArgsConstructor;
 import nbcamp.deliveryapp.Dto.CreateOrderDto;
 import nbcamp.deliveryapp.Dto.OrderResponseDto;
+import nbcamp.deliveryapp.Dto.UpdateOrderStatusDto;
 import nbcamp.deliveryapp.Entity.Menu;
 import nbcamp.deliveryapp.Entity.Orders;
 import nbcamp.deliveryapp.Entity.Users;
@@ -58,7 +59,7 @@ public class OrdersService {
     @Transactional
     public void updateOrderStatusToCanceled(Long orderId, String loginId) {
         Orders order = ordersRepository.findById(orderId)
-                .orElseThrow(() -> new CustomException(ErrorCode.C404_MENU_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.C404_ORDER_NOT_FOUND));
 
         if (!order.getUser().getLoginId().equals(loginId)) {
             throw new CustomException(ErrorCode.C403_NO_AUTHORIZATION);
@@ -69,5 +70,24 @@ public class OrdersService {
         }
 
         order.setStatus(OrderStatus.CANCELED);
+    }
+
+    @Transactional
+    public void updateOrderStatus(UpdateOrderStatusDto orderDto, String loginId) {
+        Orders order = ordersRepository.findById(orderDto.getOrderId())
+                .orElseThrow(() -> new CustomException(ErrorCode.C404_ORDER_NOT_FOUND));
+
+        if (!order.getMenu().getUser().getLoginId().equals(loginId)) {
+            throw new CustomException(ErrorCode.C403_NO_AUTHORIZATION);
+        }
+
+        OrderStatus newStatus = orderDto.getOrderStatus();
+        OrderStatus oldStatus = order.getStatus();
+        if (newStatus.equals(OrderStatus.ORDERED) && oldStatus.equals(OrderStatus.ACCEPTED) ||
+            newStatus.equals(OrderStatus.ACCEPTED) && oldStatus.equals(OrderStatus.COMPLETED)) {
+            order.setStatus(newStatus);
+        } else {
+            throw new CustomException(ErrorCode.C400_BAD_REQUEST);
+        }
     }
 }
