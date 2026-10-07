@@ -44,12 +44,24 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponseDto>>  getOrderList(HttpServletRequest request) {
+    public ResponseEntity<List<OrderResponseDto>> getOrderList(HttpServletRequest request) {
         String loginId = authService.getLoginIdFromRequest(request);
         List<OrderResponseDto> orderList = orderService.findAllByLoginId(loginId);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(orderList);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> updateOrderStatus(@PathVariable Long id,
+                                              HttpServletRequest request) {
+        authService.validRoleCheck(request, UserRole.CUSTOMER);
+        String loginId = authService.getLoginIdFromRequest(request);
+        orderService.updateOrderStatusToCanceled(id, loginId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .build();
     }
 }

@@ -54,4 +54,20 @@ public class OrdersService {
                 .toList();
 
     }
+
+    @Transactional
+    public void updateOrderStatusToCanceled(Long orderId, String loginId) {
+        Orders order = ordersRepository.findById(orderId)
+                .orElseThrow(() -> new CustomException(ErrorCode.C404_MENU_NOT_FOUND));
+
+        if (!order.getUser().getLoginId().equals(loginId)) {
+            throw new CustomException(ErrorCode.C403_NO_AUTHORIZATION);
+        }
+
+        if (!order.getStatus().equals(OrderStatus.ORDERED)) {
+            throw new CustomException(ErrorCode.C400_BAD_REQUEST);
+        }
+
+        order.setStatus(OrderStatus.CANCELED);
+    }
 }
